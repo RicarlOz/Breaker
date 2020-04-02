@@ -1,5 +1,5 @@
 
-package breaker2;
+package breakergit;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;

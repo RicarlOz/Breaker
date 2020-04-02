@@ -1,4 +1,4 @@
-package breaker2;
+package breakergit;
 
 import java.awt.Graphics;
 import java.awt.Point;

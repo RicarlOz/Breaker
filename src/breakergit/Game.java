@@ -1,5 +1,5 @@
 
-package breaker2;
+package breakergit;
 
 import java.awt.Color;
 import java.awt.Font;
