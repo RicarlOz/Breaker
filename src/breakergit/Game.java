@@ -28,6 +28,7 @@ public class Game implements Runnable {
     private LinkedList<Live> hearts;            // to store the hearts
     private LinkedList<Ball> balls;             // to store the ball
     private LinkedList<PowerUp> powerUps;       // to use plus powerUp
+    private BlockSet conjunto;
 
     private Thread thread;                      // thread to create the game
     private KeyManager keyManager;              // to manage the keyboard
@@ -51,6 +52,7 @@ public class Game implements Runnable {
 
         keyManager = new KeyManager();
         RW = new ReadandWrite(this);
+        conjunto = new BlockSet(this);
     }
 
     /**
@@ -60,13 +62,14 @@ public class Game implements Runnable {
         display = new Display(title, getWidth(), getHeight());
         Assets.init();
         display.getJframe().addKeyListener(keyManager);
-
+        conjunto.init();
+        
         player = new Player(getWidth() / 2 - 32, getHeight() - 70, 100, 40, this);
         balls = new LinkedList();
         Ball ball = new Ball(getWidth() / 2 - 64, getHeight() - 90, 25, 25, this);
         balls.add(ball);
         powerUps = new LinkedList();
-        PowerUp powerUp = new PowerUp(1, getWidth() / 2, 15, 25, 25, this);
+        PowerUp powerUp = new PowerUp(2, getWidth() / 2, 15, 25, 25, this);
         powerUps.add(powerUp);
         hearts = new LinkedList();
         for (int i = 1; i <= lives; i++) {
@@ -215,7 +218,8 @@ public class Game implements Runnable {
                 balls.get(i).setFistFlag(false);
             }
         }
-
+        
+        conjunto.tick();
         RW.tick();
     }
 
@@ -266,6 +270,7 @@ public class Game implements Runnable {
                         hearts.get(i).render(g);
                     }
                     player.render(g);
+                    conjunto.render();
                 } else {
                     g.drawImage(Assets.background, 0, 0, width, height, null);
 
@@ -290,6 +295,7 @@ public class Game implements Runnable {
                         hearts.get(i).render(g);
                     }
                     player.render(g);
+                    conjunto.render();
                 }
             } else {
                 g.drawImage(Assets.gameover, 0, 0, width, height, null);
@@ -333,10 +339,6 @@ public class Game implements Runnable {
         return height;
     }
 
-    public KeyManager getKeyManager() {
-        return keyManager;
-    }
-
     /**
      * To get the lives
      *
@@ -354,5 +356,20 @@ public class Game implements Runnable {
     public int getScore() {
         return score;
     }
+    
+    public ReadandWrite getRW(){
+        return RW;
+    }
 
+    public KeyManager getKeyManager() {
+        return keyManager;
+    }
+    
+    public LinkedList<Ball> getBalls(){
+        return balls;
+    }
+    
+    public Graphics getGraphics(){
+        return g;
+    }
 }
