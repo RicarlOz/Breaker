@@ -54,7 +54,7 @@ public class Game implements Runnable {
     }
 
     /**
-     * initializing the display window of the game
+     * initializing the display window of the game and items
      */
     private void init() {
         display = new Display(title, getWidth(), getHeight());
@@ -66,7 +66,7 @@ public class Game implements Runnable {
         Ball ball = new Ball(getWidth() / 2 - 64, getHeight() - 90, 25, 25, this);
         balls.add(ball);
         powerUps = new LinkedList();
-        PowerUp powerUp = new PowerUp(2, getWidth() / 2, 15, 25, 25, this);
+        PowerUp powerUp = new PowerUp(1, getWidth() / 2, 15, 25, 25, this);
         powerUps.add(powerUp);
         hearts = new LinkedList();
         for (int i = 1; i <= lives; i++) {
@@ -138,14 +138,21 @@ public class Game implements Runnable {
         stop();
     }
 
+    /**
+     * ticks of the game
+     */
     private void tick() {
         // ticks
         player.tick();
         for (int i = 0; i < balls.size(); i++) {
             balls.get(i).tick();
 
-            if (player.collision(balls.get(i))) {
+            if (player.collisionX(balls.get(i))) {
                 balls.get(i).setDirY(balls.get(i).getDirY() * -1);
+            }
+            
+            if (player.collisionY(balls.get(i))) {
+                balls.get(i).setDirX(balls.get(i).getDirY() * -1);
             }
 
             if (balls.get(i).getY() >= getHeight()) {
@@ -156,7 +163,7 @@ public class Game implements Runnable {
         for (int i = 0; i < powerUps.size(); i++) {
             powerUps.get(i).tick();
 
-            if (player.collision(powerUps.get(i))) {
+            if (player.collisionX(powerUps.get(i))) {
                 switch (powerUps.get(i).getID()) {
                     case 1:
                         Ball ball = new Ball(balls.get(0).getX(), balls.get(0).getY(), 25, 25, this);
@@ -210,6 +217,9 @@ public class Game implements Runnable {
         RW.tick();
     }
 
+    /**
+     * rendering each element of the game
+     */
     private void render() {
         // get the buffer strategy from the display
         bs = display.getCanvas().getBufferStrategy();
