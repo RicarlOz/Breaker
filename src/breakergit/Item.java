@@ -111,8 +111,8 @@ public abstract class Item {
     public boolean collisionY(Object o) {
         boolean bStatus = false;        // assuming not collision
         if (o instanceof Item) {
-            Rectangle rThisLeft = new Rectangle(getX(), getY(), getWidth(), 1);
-            Rectangle rThisRight = new Rectangle(getX(), getY() + getHeight(), getWidth(), 1);
+            Rectangle rThisLeft = new Rectangle(getX(), getY(), 1, getHeight());
+            Rectangle rThisRight = new Rectangle(getX() + getWidth(), getY(), 1, getHeight());
             Item i = (Item) o;
             Rectangle rOther = new Rectangle(i.getX(), i.getY(), i.getWidth(),
                     i.getHeight());

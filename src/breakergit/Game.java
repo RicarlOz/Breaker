@@ -147,17 +147,19 @@ public class Game implements Runnable {
         for (int i = 0; i < balls.size(); i++) {
             balls.get(i).tick();
 
-            if (player.collisionX(balls.get(i))) {
+            if (player.collisionX(balls.get(i)) && balls.get(i).colTimer > 30) {
                 balls.get(i).setDirY(balls.get(i).getDirY() * -1);
+                balls.get(i).setColTimer(0);
             }
             
-            if (player.collisionY(balls.get(i))) {
+            if (player.collisionY(balls.get(i)) && balls.get(i).colTimer > 30) {
                 balls.get(i).setDirX(balls.get(i).getDirY() * -1);
+                balls.get(i).setColTimer(0);
             }
 
             if (balls.get(i).getY() >= getHeight()) {
-                lives--;
-                hearts.removeLast();
+                //lives--;
+                //hearts.removeLast();
             }
         }
         for (int i = 0; i < powerUps.size(); i++) {

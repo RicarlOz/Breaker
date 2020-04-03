@@ -13,6 +13,7 @@ import java.awt.Graphics;
  */
 public class Ball extends Item {
     private Game game;
+    public int colTimer;           // to store a timer for collisions
     public int dirX;
     public int dirY;
     public boolean flagBomb;
@@ -27,8 +28,8 @@ public class Ball extends Item {
 
     @Override
     public void tick() {
-        setX(getX() + (dirX * 4));
-        setY(getY() + (dirY * 4));
+        setX(getX() + (dirX * 6));
+        setY(getY() + (dirY * 6));
         
         if (getX() <= 0 || getX() + 25 > game.getWidth()) {
             dirX *= -1;
@@ -37,6 +38,7 @@ public class Ball extends Item {
         if (getY() <= 0 || getY() > game.getHeight()) {
             dirY *= -1;
         }
+        colTimer += 1;
     }
 
     @Override
@@ -58,6 +60,10 @@ public class Ball extends Item {
     
     public void setFistFlag(boolean flag) {
         this.flagFist = flag;
+    }
+    
+    public void setColTimer(int time) {
+        this.colTimer = time;
     }
     
     public void setDirX(int dirX) {
