@@ -1,7 +1,6 @@
 package breakergit;
 
 import java.awt.Graphics;
-import java.awt.Point;
 import java.awt.Rectangle;
 
 /**
@@ -95,8 +94,7 @@ public abstract class Item {
     public boolean collision(Object o) {
         boolean bStatus = false;        // assuming not collision
         if (o instanceof Item) {
-            Rectangle rThis = new Rectangle(getX() + 20, getY() + 20, getWidth() - 35,
-                    getHeight() - 50);
+            Rectangle rThis = new Rectangle(getX(), getY(), getWidth(), 1);
             Item i = (Item) o;
             Rectangle rOther = new Rectangle(i.getX(), i.getY(), i.getWidth(),
                     i.getHeight());
@@ -104,15 +102,6 @@ public abstract class Item {
             bStatus = rThis.intersects(rOther);
         }
 
-        return bStatus;
-    }
-    
-    public boolean hold(Point p){
-        boolean bStatus = false;
-        Rectangle rThis = new Rectangle(getX(), getY(), getWidth(), getHeight());
-        
-        bStatus = rThis.contains(p);
-        
         return bStatus;
     }
 }

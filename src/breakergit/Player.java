@@ -18,11 +18,19 @@ public class Player extends Item {
     @Override
     public void tick() {
         if (game.getKeyManager().left) {
-            setX(getX() - 1);
+            setX(getX() - 7);
         }
         if (game.getKeyManager().right) {
-            setX(getX() + 1);
+            setX(getX() + 7);
         }
+
+        // reset x position if gets out of the screen
+        if (getX() + width >= game.getWidth()) {
+            setX(game.getWidth() - width);
+        } else if (getX() <= 0) {
+            setX(0);
+        }
+        
     }
 
     @Override

@@ -21,6 +21,8 @@ public class Assets {
     public static BufferedImage fist;       // to store fist powerUp image
     public static BufferedImage plus;       // to store plus powerUp image
     public static BufferedImage ball;       // to store ball image
+    public static BufferedImage ballBomb;   // to store ball image
+    public static BufferedImage ballFist;   // to store ball image
     
     public static BufferedImage liveSprites;        // to store the live sprites
     public static BufferedImage liveFrames[];       // pictures to animate live
@@ -47,7 +49,10 @@ public class Assets {
         bomb = ImageLoader.loadImage("/images/bomb.png");
         fist = ImageLoader.loadImage("/images/fist.png");
         plus = ImageLoader.loadImage("/images/plus.png");
+        player = ImageLoader.loadImage("/images/player.png");
         ball = ImageLoader.loadImage("/images/ball.png");
+        ballBomb = ImageLoader.loadImage("/images/ballBomb.png");
+        ballFist = ImageLoader.loadImage("/images/ballFist.png");
         
         backSound = new SoundClip("/sounds/backSound.wav");
         crash = new SoundClip("/sounds/crash.wav");
