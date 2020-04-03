@@ -8,7 +8,7 @@ import java.util.LinkedList;
 
 /**
  *
- * @author hgm
+ * @author RicardoGomez and HeribertoGil
  */
 public class Game implements Runnable {
 
@@ -151,7 +151,7 @@ public class Game implements Runnable {
                 balls.get(i).setDirY(balls.get(i).getDirY() * -1);
                 balls.get(i).setColTimer(0);
             }
-            
+
             if (player.collisionY(balls.get(i)) && balls.get(i).colTimer > 30) {
                 balls.get(i).setDirX(balls.get(i).getDirY() * -1);
                 balls.get(i).setColTimer(0);
@@ -315,6 +315,11 @@ public class Game implements Runnable {
      *
      * @return an <code>int</code> value with the width
      */
+    /**
+     * To get the width of the game window
+     *
+     * @return an <code>int</code> value with the width
+     */
     public int getWidth() {
         return width;
     }
@@ -332,10 +337,20 @@ public class Game implements Runnable {
         return keyManager;
     }
 
+    /**
+     * To get the lives
+     *
+     * @return an <code>int</code> value with the lives
+     */
     public int getLives() {
         return lives;
     }
 
+    /**
+     * To get the score
+     *
+     * @return an <code>int</code> value with the score
+     */
     public int getScore() {
         return score;
     }

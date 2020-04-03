@@ -6,7 +6,7 @@ import java.awt.event.KeyListener;
 
 /**
  *
- * @author hgm
+ * @author RicardoGomez and HeribertoGil
  */
 public class KeyManager implements KeyListener {
     

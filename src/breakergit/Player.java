@@ -4,7 +4,7 @@ import java.awt.Graphics;
 
 /**
  *
- * @author hgm
+ * @author RicardoGomez and HeribertoGil
  */
 public class Player extends Item {
 
@@ -17,6 +17,7 @@ public class Player extends Item {
 
     @Override
     public void tick() {
+        // moves the player
         if (game.getKeyManager().left) {
             setX(getX() - 7);
         }

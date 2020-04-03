@@ -8,7 +8,7 @@ import java.io.BufferedReader;
 
 /**
  *
- * @author hgm
+ * @author RicardoGomez and HeribertoGil
  */
 public class ReadandWrite {
     

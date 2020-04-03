@@ -9,15 +9,15 @@ import java.awt.Graphics;
 
 /**
  *
- * @author ricar
+ * @author RicardoGomez and HeribertoGil
  */
 public class Ball extends Item {
     private Game game;
-    public int colTimer;           // to store a timer for collisions
-    public int dirX;
-    public int dirY;
-    public boolean flagBomb;
-    public boolean flagFist;
+    public int colTimer;            // to store a timer for collisions
+    public int dirX;                // to store the direction of the ball in the x axis
+    public int dirY;                // to store the direction of the ball in the y axis
+    public boolean flagBomb;        // to store a flag for bomb powerUp
+    public boolean flagFist;        // to store a flag for fist powerUp
 
     public Ball(int x, int y, int width, int height, Game game) {
         super(x, y, width, height);
@@ -28,13 +28,16 @@ public class Ball extends Item {
 
     @Override
     public void tick() {
+        // setters to move the ball
         setX(getX() + (dirX * 6));
         setY(getY() + (dirY * 6));
         
+        // changes the ball direction X if gets out of the screen
         if (getX() <= 0 || getX() + 25 > game.getWidth()) {
             dirX *= -1;
         }
         
+        // changes the ball direction Y if gets out of the screen
         if (getY() <= 0 || getY() > game.getHeight()) {
             dirY *= -1;
         }
@@ -54,6 +57,7 @@ public class Ball extends Item {
         }
     }
     
+    // setters    
     public void setBombFlag(boolean flag) {
         this.flagBomb = flag;
     }
@@ -74,6 +78,7 @@ public class Ball extends Item {
         this.dirY = dirY;
     }
     
+    // getters    
     public int getDirX() {
         return dirX;
     }
