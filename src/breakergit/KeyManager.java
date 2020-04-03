@@ -16,16 +16,16 @@ public class KeyManager implements KeyListener {
     public boolean right;   // flag to move right the player
     public boolean space;   //custom flag
     
-    public boolean s; // save
-    public boolean l; // load
-    public boolean p; // pause
+    public boolean save; // save
+    public boolean load; // load
+    public boolean pause; // pause
     
 
     private boolean keys[];  // to store all the flags for every key
     
     public KeyManager() {
         keys = new boolean[256];
-        p = false;
+        pause = false;
     }
     
     @Override
@@ -34,9 +34,7 @@ public class KeyManager implements KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        // set true to every key released
-        //keys[e.getKeyCode()] = true;
-        
+        // set true to every key pressed except key S and L
         if(e.getKeyCode() != KeyEvent.VK_S && e.getKeyCode() != KeyEvent.VK_L){
             keys[e.getKeyCode()] = true;
         }
@@ -44,9 +42,7 @@ public class KeyManager implements KeyListener {
 
     @Override
     public void keyReleased(KeyEvent e) {
-        // set false to every key released
-        //keys[e.getKeyCode()] = false;
-        
+        // set false to every key released and true to key S, L and P
         switch(e.getKeyCode()){
             case KeyEvent.VK_S:
                 keys[e.getKeyCode()] = true;
@@ -55,7 +51,7 @@ public class KeyManager implements KeyListener {
                 keys[e.getKeyCode()] = true;
                 break;
             case KeyEvent.VK_P:
-                p = !p;
+                pause = !pause;
                 break;
             default:
                 keys[e.getKeyCode()] = false;
@@ -67,14 +63,10 @@ public class KeyManager implements KeyListener {
      * to enable or disable moves on every tick
      */
     public void tick() {
-        up = keys[KeyEvent.VK_UP];
-        down = keys[KeyEvent.VK_DOWN];
         left = keys[KeyEvent.VK_LEFT];
         right = keys[KeyEvent.VK_RIGHT];
-        space = keys[KeyEvent.VK_SPACE];
-        
-        s = keys[KeyEvent.VK_S];
-        l = keys[KeyEvent.VK_L];
+        save = keys[KeyEvent.VK_S];
+        load = keys[KeyEvent.VK_L];
         
         keys[KeyEvent.VK_S] = false;
         keys[KeyEvent.VK_L] = false;

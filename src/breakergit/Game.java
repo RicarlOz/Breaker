@@ -1,4 +1,3 @@
-
 package breakergit;
 
 import java.awt.Color;
@@ -18,18 +17,15 @@ public class Game implements Runnable {
     private String title;                       // title of the window
     private int width;                          // width of the window
     private int height;                         // height of the window
-    private Thread thread;                      // thread to create the game
-    private boolean running;                    // to set the game
-
-    private MouseManager mouseManager;
-    private KeyManager keyManager;  
-    private ReadandWrite RW;
-    private Player player;
-
     private int score;                          // to save the player score
     private int lives;                          // to save the player lives
-    private int count;                          // to save the times that the object collide with ring
-    
+    private boolean running;                    // to set the game
+    private Player player;                      // to use the player
+
+    private Thread thread;                      // thread to create the game
+    private KeyManager keyManager;              // to manage the keyboard
+    private ReadandWrite RW;                    // to manage save and load
+
     /**
      * to create title, width and height and set the game is still not running
      *
@@ -43,11 +39,9 @@ public class Game implements Runnable {
         this.height = height;
         running = false;
 
-        life = 5;
+        lives = 5;
         score = 0;
-        count = 0;
 
-        mouseManager = new MouseManager();
         keyManager = new KeyManager();
         RW = new ReadandWrite(this);
     }
@@ -58,12 +52,8 @@ public class Game implements Runnable {
     private void init() {
         display = new Display(title, getWidth(), getHeight());
         Assets.init();
-
         player = new Player(100, 100, 100, 100, this);
-        
-        display.getJFrame().addKeyListener(keyManager);
-        display.getCanvas().addMouseListener(mouseManager);
-        display.getCanvas().addMouseMotionListener(mouseManager);
+        display.getJframe().addKeyListener(keyManager);
 
         // plays the backSound
         Assets.backSound.setLooping(true);
@@ -71,7 +61,7 @@ public class Game implements Runnable {
     }
 
     /**
-     * setting the thead for the game
+     * setting the thread for the game
      */
     public synchronized void start() {
         if (!running) {
@@ -118,8 +108,8 @@ public class Game implements Runnable {
 
             // if delta is positive we tick the game
             if (delta >= 1) {
-            	keyManager.tick();
-                if (lives > 0 && keyManager.p == false) {
+                keyManager.tick();
+                if (lives > 0 && keyManager.pause == false) {
                     tick();
                 }
                 render();
@@ -129,17 +119,10 @@ public class Game implements Runnable {
         stop();
     }
 
-
     private void tick() {
         // ticks
-        mouseManager.tick();
         player.tick();
-        
-        //revisar colisiones con otros objetos
-        	//dentro de las colisiones llamar a la funcion de sonido;
-
-        //System.out.println("("+mouseManager.x+","+mouseManager.y+")");
-    	RW.tick();
+        RW.tick();
     }
 
     private void render() {
@@ -150,63 +133,54 @@ public class Game implements Runnable {
         after clearing the Rectanlge, getting the graphic object from the 
         buffer strategy element. 
         show the graphic and dispose it to the trash system
-        */
+         */
         if (bs == null) {
             display.getCanvas().createBufferStrategy(3);
-        }
-        else
-        {
+        } else {
             g = bs.getDrawGraphics();
-            
-            if(life > 0){
-                if(keyManager.p){
+
+            if (lives > 0) {
+                if (keyManager.pause) {
                     g.drawImage(Assets.background, 0, 0, width, height, null);
-            
+
                     // Displays the score with a specific format
-    	        	g.setFont(new Font("Cooper Black", Font.BOLD, 20));
-    		        g.setColor(Color.red);
-    		        g.drawString("Score: " + score, getWidth() - 150, 50);
+                    g.setFont(new Font("Cooper Black", Font.BOLD, 20));
+                    g.setColor(Color.red);
+                    g.drawString("Score: " + score, getWidth() - 150, 50);
 
-         		    // Displays the lives with a specific format
-        		    g.setFont(new Font("Cooper Black", Font.BOLD, 20));
-        		    g.setColor(Color.red);
-        		    g.drawString("Lives: " + lives, getWidth() - 150, 80);
+                    // Displays the lives with a specific format
+                    g.setFont(new Font("Cooper Black", Font.BOLD, 20));
+                    g.setColor(Color.red);
+                    g.drawString("Lives: " + lives, getWidth() - 150, 80);
 
-        		    // Display Pause signal
-        		    g.setFont(new Font("Cooper Black", Font.BOLD, 20));
-        		    g.setColor(Color.red);
-        		    g.drawString("Pause", getWidth() - 150, 110);
-            
+                    // Display Pause signal
+                    g.setFont(new Font("Cooper Black", Font.BOLD, 20));
+                    g.setColor(Color.red);
+                    g.drawString("Pause", getWidth() - 150, 110);
+
+                    player.render(g);
+                } else {
+                    g.drawImage(Assets.background, 0, 0, width, height, null);
+
+                    // Displays the score with a specific format
+                    g.setFont(new Font("Cooper Black", Font.BOLD, 20));
+                    g.setColor(Color.red);
+                    g.drawString("Score: " + score, getWidth() - 150, 50);
+
+                    // Displays the lives with a specific format
+                    g.setFont(new Font("Cooper Black", Font.BOLD, 20));
+                    g.setColor(Color.red);
+                    g.drawString("Lives: " + lives, getWidth() - 150, 80);
+
                     player.render(g);
                 }
-                else{
-                    g.drawImage(Assets.background, 0, 0, width, height, null);
-            
-                    // Displays the score with a specific format
-    	        	g.setFont(new Font("Cooper Black", Font.BOLD, 20));
-    		        g.setColor(Color.red);
-    		        g.drawString("Score: " + score, getWidth() - 150, 50);
-
-         		    // Displays the lives with a specific format
-        		    g.setFont(new Font("Cooper Black", Font.BOLD, 20));
-        		    g.setColor(Color.red);
-        		    g.drawString("Lives: " + lives, getWidth() - 150, 80);
-            
-                    player.render(g);
-                }
-            }
-            else{
+            } else {
                 g.drawImage(Assets.gameover, 0, 0, width, height, null);
             }
-        
+
             bs.show();
             g.dispose();
         }
-    }
-
-    //funcion de sonido
-    public void beep(){
-        Assets.point.play();
     }
 
     //setters
@@ -219,7 +193,6 @@ public class Game implements Runnable {
     }
 
     //getters
-
     /**
      * To get the width of the game window
      *
@@ -238,10 +211,10 @@ public class Game implements Runnable {
         return height;
     }
 
-    public MouseManager getMouseManager(){
-        return mouseManager;
+    public KeyManager getKeyManager() {
+        return keyManager;
     }
-    
+
     public int getLives() {
         return lives;
     }
