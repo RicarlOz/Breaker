@@ -10,8 +10,6 @@ import java.awt.event.KeyListener;
  */
 public class KeyManager implements KeyListener {
     
-    public boolean up;      // flag to move up the player
-    public boolean down;    // flag to move down the player
     public boolean left;    // flag to move left the player
     public boolean right;   // flag to move right the player
     public boolean space;   //custom flag
@@ -35,7 +33,7 @@ public class KeyManager implements KeyListener {
     @Override
     public void keyPressed(KeyEvent e) {
         // set true to every key pressed except key S and L
-        if(e.getKeyCode() != KeyEvent.VK_S && e.getKeyCode() != KeyEvent.VK_L){
+        if(e.getKeyCode() != KeyEvent.VK_G && e.getKeyCode() != KeyEvent.VK_C){
             keys[e.getKeyCode()] = true;
         }
     }
@@ -44,10 +42,10 @@ public class KeyManager implements KeyListener {
     public void keyReleased(KeyEvent e) {
         // set false to every key released and true to key S, L and P
         switch(e.getKeyCode()){
-            case KeyEvent.VK_S:
+            case KeyEvent.VK_G:
                 keys[e.getKeyCode()] = true;
                 break;
-            case KeyEvent.VK_L:
+            case KeyEvent.VK_C:
                 keys[e.getKeyCode()] = true;
                 break;
             case KeyEvent.VK_P:
@@ -65,10 +63,10 @@ public class KeyManager implements KeyListener {
     public void tick() {
         left = keys[KeyEvent.VK_LEFT];
         right = keys[KeyEvent.VK_RIGHT];
-        save = keys[KeyEvent.VK_S];
-        load = keys[KeyEvent.VK_L];
+        save = keys[KeyEvent.VK_G];
+        load = keys[KeyEvent.VK_C];
         
-        keys[KeyEvent.VK_S] = false;
-        keys[KeyEvent.VK_L] = false;
+        keys[KeyEvent.VK_G] = false;
+        keys[KeyEvent.VK_C] = false;
     }
 }
