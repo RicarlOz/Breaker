@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package breakergit;
 
 import java.awt.Graphics;
@@ -38,7 +33,7 @@ public class Ball extends Item {
         }
         
         // changes the ball direction Y if gets out of the screen
-        if (getY() <= 0 || getY() > game.getHeight()) {
+        if (getY() <= 0) {
             dirY *= -1;
         }
         colTimer += 1;

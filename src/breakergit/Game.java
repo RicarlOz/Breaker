@@ -28,7 +28,9 @@ public class Game implements Runnable {
     private LinkedList<Live> hearts;            // to store the hearts
     private LinkedList<Ball> balls;             // to store the ball
     private LinkedList<PowerUp> powerUps;       // to use plus powerUp
-    private BlockSet conjunto;
+    private Color color;                        // to store a color
+    private BlockSet conjunto;                  // to create a set of blocks
+    private LinkedList<Explosion> explosions;   // to store explosions
 
     private Thread thread;                      // thread to create the game
     private KeyManager keyManager;              // to manage the keyboard
@@ -49,6 +51,7 @@ public class Game implements Runnable {
 
         lives = 5;
         score = 0;
+        color = new Color(255, 102, 69);
 
         keyManager = new KeyManager();
         RW = new ReadandWrite(this);
@@ -64,13 +67,12 @@ public class Game implements Runnable {
         display.getJframe().addKeyListener(keyManager);
         conjunto.init();
         
+        powerUps = new LinkedList();
+        explosions = new LinkedList();
         player = new Player(getWidth() / 2 - 32, getHeight() - 70, 100, 40, this);
         balls = new LinkedList();
         Ball ball = new Ball(getWidth() / 2 - 64, getHeight() - 90, 25, 25, this);
         balls.add(ball);
-        powerUps = new LinkedList();
-        PowerUp powerUp = new PowerUp(1, getWidth() / 2, 15, 25, 25, this);
-        powerUps.add(powerUp);
         hearts = new LinkedList();
         for (int i = 1; i <= lives; i++) {
             Live live = new Live(getWidth() - (35 * i), 10, 25, 25, this);
@@ -147,28 +149,12 @@ public class Game implements Runnable {
     private void tick() {
         // ticks
         player.tick();
-        for (int i = 0; i < balls.size(); i++) {
-            balls.get(i).tick();
-
-            if (player.collisionX(balls.get(i)) && balls.get(i).colTimer > 30) {
-                balls.get(i).setDirY(balls.get(i).getDirY() * -1);
-                balls.get(i).setColTimer(0);
-            }
-
-            if (player.collisionY(balls.get(i)) && balls.get(i).colTimer > 30) {
-                balls.get(i).setDirX(balls.get(i).getDirY() * -1);
-                balls.get(i).setColTimer(0);
-            }
-
-            if (balls.get(i).getY() >= getHeight()) {
-                //lives--;
-                //hearts.removeLast();
-            }
-        }
+        
         for (int i = 0; i < powerUps.size(); i++) {
             powerUps.get(i).tick();
 
             if (player.collisionX(powerUps.get(i))) {
+                Assets.powerUp.play();
                 switch (powerUps.get(i).getID()) {
                     case 1:
                         Ball ball = new Ball(balls.get(0).getX(), balls.get(0).getY(), 25, 25, this);
@@ -176,7 +162,7 @@ public class Game implements Runnable {
                         break;
                     case 2:
                         for (int j = 0; j < balls.size(); j++) {
-                            if (balls.get(i).flagFist) {
+                            if (balls.get(j).flagFist) {
                                 balls.get(j).setFistFlag(false);
                             }
                             balls.get(j).setBombFlag(true);
@@ -185,7 +171,7 @@ public class Game implements Runnable {
                         break;
                     case 3:
                         for (int j = 0; j < balls.size(); j++) {
-                            if (balls.get(i).flagFist) {
+                            if (balls.get(j).flagBomb) {
                                 balls.get(j).setFistFlag(false);
                             }
                             balls.get(j).setFistFlag(true);
@@ -197,7 +183,43 @@ public class Game implements Runnable {
                 }
                 powerUps.remove(i);
             }
+            else {
+                if (powerUps.get(i).getY() > getHeight()) {
+                    powerUps.remove(i);
+                }
+            }
         }
+        
+        for (int i = 0; i < balls.size(); i++) {
+            balls.get(i).tick();
+
+            // checks collision between balls and player
+            if (player.collisionX(balls.get(i)) && balls.get(i).colTimer > 30) {
+                balls.get(i).setDirY(balls.get(i).getDirY() * -1);
+                balls.get(i).setColTimer(0);
+            }
+
+            if (player.collisionY(balls.get(i)) && balls.get(i).colTimer > 30) {
+                balls.get(i).setDirX(balls.get(i).getDirX() * -1);
+                balls.get(i).setColTimer(0);
+            }
+
+            // removes a ball if go down of the screen
+            if (balls.get(i).getY() >= getHeight()) {
+                balls.remove(balls.get(i));
+            }
+
+            if (balls.isEmpty()) {
+                lives--;
+                hearts.removeLast();
+                Assets.loseLive.play();
+                player.setX(getWidth() / 2 - 32);
+                player.setY(getHeight() - 70);
+                Ball ball = new Ball(getWidth() / 2 - 64, getHeight() - 90, 25, 25, this);
+                balls.add(ball);
+            }
+        }
+        
         for (int i = 0; i < hearts.size(); i++) {
             hearts.get(i).tick();
         }
@@ -207,20 +229,49 @@ public class Game implements Runnable {
             timerFist += 1;
         }
 
-        if (timerBomb == 10) {
+        if (timerBomb == 5) {
             for (int i = 0; i < balls.size(); i++) {
                 balls.get(i).setBombFlag(false);
             }
         }
 
-        if (timerFist == 10) {
+        if (timerFist == 5) {
             for (int i = 0; i < balls.size(); i++) {
                 balls.get(i).setFistFlag(false);
             }
         }
         
+        for (int i = 0; i < explosions.size(); i++) {
+            explosions.get(i).tick();
+            if (explosions.get(i).getTimer() == 2) {
+                explosions.remove(i);
+            }
+        }
         conjunto.tick();
         RW.tick();
+    }
+
+    /**
+     * generates powerUps
+     * @param x to set the x position of the powerUp
+     * @param y to set the y position of the powerUp
+     */
+    public void powerUp(int x, int y) {
+        int ID = (int) (Math.random() * 3) + 1;
+        if (ID > 0 && ID <= 3) {
+            PowerUp powerUp = new PowerUp(ID, x + 45, y, 25, 25, this);
+            powerUps.add(powerUp);
+        }
+    }
+    
+    /**
+     * generates explosions
+     * @param x to set the x position of the explosion
+     * @param y to set the y position of the explosion
+     */
+    public void explosion(int x, int y) {
+        Explosion exp = new Explosion(x - 70, y - 50, 120, 120, this);
+        explosions.add(exp);
     }
 
     /**
@@ -245,18 +296,20 @@ public class Game implements Runnable {
                     g.drawImage(Assets.background, 0, 0, width, height, null);
 
                     // Displays the score with a specific format
+                    g.setFont(new Font("Impact", Font.BOLD, 22));
+                    g.setColor(Color.black);
+                    g.drawString("Score: " + score, 11, 25);
                     g.setFont(new Font("Impact", Font.BOLD, 20));
-                    g.setColor(Color.red);
+                    g.setColor(color);
                     g.drawString("Score: " + score, 15, 25);
 
-                    // Displays the lives with a specific format
-                    //g.setFont(new Font("Cooper Black", Font.BOLD, 20));
-                    //g.setColor(Color.red);
-                    //g.drawString("Lives: " + lives, getWidth() - 150, 80);
                     // Display Pause signal
-                    g.setFont(new Font("Cooper Black", Font.BOLD, 20));
-                    g.setColor(Color.red);
-                    g.drawString("Pause", getWidth() - 150, 110);
+                    g.setFont(new Font("Impact", Font.BOLD, 63));
+                    g.setColor(Color.black);
+                    g.drawString("Pause", getWidth() / 2 - 85, getHeight() / 2 - 2);
+                    g.setFont(new Font("Impact", Font.BOLD, 60));
+                    g.setColor(color);
+                    g.drawString("Pause", getWidth() / 2 - 80, getHeight() / 2);
 
                     for (int i = 0; i < balls.size(); i++) {
                         balls.get(i).render(g);
@@ -269,20 +322,24 @@ public class Game implements Runnable {
                     for (int i = 0; i < hearts.size(); i++) {
                         hearts.get(i).render(g);
                     }
+                    
+                    for (int i = 0; i < explosions.size(); i++) {
+                        explosions.get(i).render(g);
+                    }
+                    
                     player.render(g);
                     conjunto.render();
                 } else {
                     g.drawImage(Assets.background, 0, 0, width, height, null);
 
                     // Displays the score with a specific format
+                    g.setFont(new Font("Impact", Font.BOLD, 22));
+                    g.setColor(Color.black);
+                    g.drawString("Score: " + score, 11, 25);
                     g.setFont(new Font("Impact", Font.BOLD, 20));
-                    g.setColor(Color.red);
+                    g.setColor(color);
                     g.drawString("Score: " + score, 15, 25);
 
-                    // Displays the lives with a specific format
-                    //g.setFont(new Font("Cooper Black", Font.BOLD, 20));
-                    //g.setColor(Color.red);
-                    //g.drawString("Lives: " + lives, getWidth() - 150, 80);
                     for (int i = 0; i < balls.size(); i++) {
                         balls.get(i).render(g);
                     }
@@ -294,6 +351,11 @@ public class Game implements Runnable {
                     for (int i = 0; i < hearts.size(); i++) {
                         hearts.get(i).render(g);
                     }
+                    
+                    for (int i = 0; i < explosions.size(); i++) {
+                        explosions.get(i).render(g);
+                    }
+                    
                     player.render(g);
                     conjunto.render();
                 }
@@ -357,23 +419,31 @@ public class Game implements Runnable {
         return score;
     }
     
-    public ReadandWrite getRW(){
+    public int getExpSize() {
+        return explosions.size();
+    }
+    
+    public Explosion getExp(int i) {
+        return explosions.get(i);
+    }
+
+    public ReadandWrite getRW() {
         return RW;
     }
 
     public KeyManager getKeyManager() {
         return keyManager;
     }
-    
-    public LinkedList<Ball> getBalls(){
+
+    public LinkedList<Ball> getBalls() {
         return balls;
     }
-    
-    public Graphics getGraphics(){
+
+    public Graphics getGraphics() {
         return g;
     }
-    
-    public BlockSet getBlockSet(){
+
+    public BlockSet getBlockSet() {
         return conjunto;
     }
 }

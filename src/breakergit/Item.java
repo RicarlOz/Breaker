@@ -124,4 +124,21 @@ public abstract class Item {
 
         return bStatus;
     }
+    
+    public boolean collisionExp(Object o) {
+        boolean bStatus = false;        // assuming not collision
+        if (o instanceof Item) {
+            Rectangle rThis = new Rectangle(getX(), getY(), getWidth(), 
+                    getHeight());
+            Item i = (Item) o;
+            Rectangle rOther = new Rectangle(i.getX(), i.getY(), i.getWidth(),
+                    i.getHeight());
+
+            if (rThis.intersects(rOther)) {
+                bStatus = true;
+            }
+        }
+
+        return bStatus;
+    }
 }

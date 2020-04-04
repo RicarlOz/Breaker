@@ -50,11 +50,11 @@ public class BlockSet {
             //System.out.println("size de Bloques: " + bloques.size());
         }
     }
-    
-    public void restauraBloques(LinkedList<Point> p){
-        
+
+    public void restauraBloques(LinkedList<Point> p) {
+
         bloques.clear();
-        
+
         Block temp;
         for (int i = 0; i < p.size(); i++) {
             //System.out.println("punto = ("+p.get(i).x+","+p.get(i).y+")");
@@ -71,28 +71,55 @@ public class BlockSet {
         if (!bloques.isEmpty()) {
             for (Ball bola : game.getBalls()) {
                 for (int i = 0; i < bloques.size(); i++) {
-                    //System.out.println("bloque no: "+i);
-                    //System.out.println("checa bloque en x: "+bloques.get(i).getX()+" y: "+bloques.get(i).getY());
                     //checar colisiones con la bola
                     if (bloques.get(i).collisionY(bola) || bloques.get(i).collisionX(bola)) {
                         if (bloques.get(i).collisionY(bola)) {
-                            //instruccion para rebotar la pelotacuando choca por el lado
+                            //instruccion para rebotar la pelota cuando choca por el lado
                             bola.setDirX(bola.getDirX() * -1);
                         }
 
                         if (bloques.get(i).collisionX(bola)) {
-                            //instruccion para rebotar la pelotacuando choca por arriba o abajo
+                            //instruccion para rebotar la pelota cuando choca por arriba o abajo
                             bola.setDirY(bola.getDirY() * -1);
                         }
-
-                        //si al chocar el bloque ya esta crackeado se borra el objeto, si no, se crackea
-                        if (bloques.get(i).isCracked()) {
-                            //System.out.println("Segundo toque");
+                        
+                        if (bola.flagFist) {
+                            Assets.destroy.play();
+                            game.setScore(game.getScore() + 15);
                             bloques.remove(i);
-                        } else {
-                            //System.out.println("Primer toque");
-                            bloques.get(i).touch();
                         }
+                        else if (bola.flagBomb) {
+                            game.explosion(bola.getX(), bola.getY());
+                            for(int j = 0; j < bloques.size(); j++) {
+                                for (int k = 0; k < game.getExpSize(); k++) {
+                                    if (bloques.get(j).collisionExp(game.getExp(k)) && game.getExp(k).getTickNo() < 2) {
+                                        if (bloques.get(i).isCracked()) {
+                                            game.powerUp(bloques.get(i).getX(), bloques.get(i).getY());
+                                            Assets.destroy.play();
+                                            game.setScore(game.getScore() + 15);
+                                            bloques.remove(i);
+                                            break;
+                                        } else {
+                                            bloques.get(i).touch();
+                                            Assets.crash.play();
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        else {
+                            //si al chocar el bloque ya esta crackeado se borra el objeto, si no, se crackea
+                            if (bloques.get(i).isCracked()) {
+                                game.powerUp(bloques.get(i).getX(), bloques.get(i).getY());
+                                Assets.destroy.play();
+                                game.setScore(game.getScore() + 15);
+                                bloques.remove(i);
+                            } else {
+                                bloques.get(i).touch();
+                                Assets.crash.play();
+                            }
+                        }
+                        
                     }
                 }
             }

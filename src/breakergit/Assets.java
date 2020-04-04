@@ -31,6 +31,7 @@ public class Assets {
     
     public static SoundClip backSound;      // to store the back sound
     public static SoundClip crash;          // to store the crash sound
+    public static SoundClip destroy;        // to store the destroy sound
     public static SoundClip loseLive;       // to store the loseLive sound
     public static SoundClip powerUp;        // to store the powerUp sound
     
@@ -56,6 +57,7 @@ public class Assets {
         
         backSound = new SoundClip("/sounds/backSound.wav");
         crash = new SoundClip("/sounds/crash.wav");
+        destroy = new SoundClip("/sounds/destroy.wav");
         loseLive = new SoundClip("/sounds/loseLive.wav");
         powerUp = new SoundClip("/sounds/powerUp.wav");
         
