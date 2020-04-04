@@ -45,7 +45,7 @@ public class BlockSet {
         for (int i = 0; i < p.size(); i++) {
             //System.out.println("punto = ("+p.get(i).x+","+p.get(i).y+")");
             //generar bloque
-            temp = new Block(p.get(i).x, p.get(i).y, 120, 40, this);
+            temp = new Block(p.get(i).x, p.get(i).y, 90, 30, this);
             bloques.add(temp);
             //System.out.println("size de Bloques: " + bloques.size());
         }
