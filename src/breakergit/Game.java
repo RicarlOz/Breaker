@@ -361,6 +361,7 @@ public class Game implements Runnable {
                 }
             } else {
                 g.drawImage(Assets.gameover, 0, 0, width, height, null);
+                Assets.backSound.stop();
             }
 
             bs.show();
