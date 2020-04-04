@@ -17,11 +17,10 @@ public class ReadandWrite {
     Game game;
     int vidas;
     int score;
-    //LinkedList<Point> puntos;
+    int nivel;
 
     ReadandWrite(Game game) {
         this.game = game;
-        //puntos = new LinkedList();
     }
 
     public void Save(String strFileName) {
@@ -30,7 +29,18 @@ public class ReadandWrite {
             PrintWriter writer = new PrintWriter(new FileWriter(strFileName));
             vidas = game.getLives();
             score = game.getScore();
-            writer.println("" + vidas + "/" + score);
+            nivel = game.getBlockSet().nivel;
+            writer.println("" + vidas + "/" + score + "/" + nivel);
+            
+            int x, y;
+            LinkedList<Block> bloques = game.getBlockSet().bloques;
+            for(int i=0; i<bloques.size(); i++){
+                x = bloques.get(i).x;
+                y = bloques.get(i).y;
+                writer.println("" + x + "-" + y);
+            }
+            writer.println("eof");
+            
             writer.close();
         } catch (IOException ioe) {
             System.out.println("File Not fund Call 911");
@@ -48,8 +58,31 @@ public class ReadandWrite {
             datos = line.split("/");
             game.setLives(Integer.parseInt(datos[0]));
             game.setScore(Integer.parseInt(datos[1]));
-            System.out.println("Se leyo vidas = " + vidas + " y score = " + score);
+            game.getBlockSet().nivel = (Integer.parseInt(datos[2]));
+            //System.out.println("Se leyo vidas = " + vidas + " y score = " + score + " y nivel = " + nivel);
+            
+            int x, y;
+            String xy[];
+            LinkedList<Point> points;
+            points = new LinkedList();
+            Point p;
+            
+            while(true){
+                line = reader.readLine();
+                if(line.equals("eof")){
+                    break;
+                }
+                xy = line.split("-");
+                x = Integer.parseInt(xy[0]);
+                y = Integer.parseInt(xy[1]);
+                
+                p = new Point(x,y);
+                
+                points.add(p);
+            }
             reader.close();
+            game.getBlockSet().restauraBloques(points);
+            
         } catch (IOException e) {
             System.out.println("File Not fund Call 911");
         }

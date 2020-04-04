@@ -372,4 +372,8 @@ public class Game implements Runnable {
     public Graphics getGraphics(){
         return g;
     }
+    
+    public BlockSet getBlockSet(){
+        return conjunto;
+    }
 }
