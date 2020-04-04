@@ -69,7 +69,7 @@ public class Game implements Runnable {
         Ball ball = new Ball(getWidth() / 2 - 64, getHeight() - 90, 25, 25, this);
         balls.add(ball);
         powerUps = new LinkedList();
-        PowerUp powerUp = new PowerUp(2, getWidth() / 2, 15, 25, 25, this);
+        PowerUp powerUp = new PowerUp(1, getWidth() / 2, 15, 25, 25, this);
         powerUps.add(powerUp);
         hearts = new LinkedList();
         for (int i = 1; i <= lives; i++) {

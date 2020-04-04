@@ -41,11 +41,11 @@ public class BlockSet {
 
     //construccion de bloques
     public void generaBloques(LinkedList<Point> p) {
-        //System.out.println("generaBloques()");
         Block temp;
-        for (Point punto : p) {
+        for (int i = 0; i < p.size(); i++) {
+            //System.out.println("punto = ("+p.get(i).x+","+p.get(i).y+")");
             //generar bloque
-            temp = new Block(punto.x, punto.y, 120, 40, this);
+            temp = new Block(p.get(i).x, p.get(i).y, 120, 40, this);
             bloques.add(temp);
             //System.out.println("size de Bloques: " + bloques.size());
         }
@@ -57,34 +57,26 @@ public class BlockSet {
         if (!bloques.isEmpty()) {
             for (Ball bola : game.getBalls()) {
                 for (int i = 0; i < bloques.size(); i++) {
+                    //System.out.println("bloque no: "+i);
+                    //System.out.println("checa bloque en x: "+bloques.get(i).getX()+" y: "+bloques.get(i).getY());
                     //checar colisiones con la bola
-                    if (bloques.get(i).collisionY(bola)) {
-                        System.out.println("toque con left/right");
-
-                        //instruccion para rebotar la pelotacuando choca por el lado
-                        bola.setDirX(bola.getDirX() * -1);
-
-                        //si al chocar el bloque ya esta crackeado se borra el objeto, si no, se crackea
-                        if (bloques.get(i).isCracked()) {
-                            System.out.println("Segundo toque");
-                            bloques.remove(i);
-                        } else {
-                            System.out.println("Primer toque");
-                            bloques.get(i).touch();
+                    if (bloques.get(i).collisionY(bola) || bloques.get(i).collisionX(bola)) {
+                        if (bloques.get(i).collisionY(bola)) {
+                            //instruccion para rebotar la pelotacuando choca por el lado
+                            bola.setDirX(bola.getDirX() * -1);
                         }
-                    }
-                    if (bloques.get(i).collisionX(bola)) {
-                        System.out.println("toque con top/bot");
 
-                        //instruccion para rebotar la pelotacuando choca por arriba o abajo
-                        bola.setDirY(bola.getDirY() * -1);
+                        if (bloques.get(i).collisionX(bola)) {
+                            //instruccion para rebotar la pelotacuando choca por arriba o abajo
+                            bola.setDirY(bola.getDirY() * -1);
+                        }
 
                         //si al chocar el bloque ya esta crackeado se borra el objeto, si no, se crackea
                         if (bloques.get(i).isCracked()) {
-                            System.out.println("Segundo toque");
+                            //System.out.println("Segundo toque");
                             bloques.remove(i);
                         } else {
-                            System.out.println("Primer toque");
+                            //System.out.println("Primer toque");
                             bloques.get(i).touch();
                         }
                     }

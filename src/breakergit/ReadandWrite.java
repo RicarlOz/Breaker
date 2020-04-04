@@ -59,11 +59,10 @@ public class ReadandWrite {
     public LinkedList<Point> LoadNivel(String strFileName) {
         Point temp;
         LinkedList<Point> puntos;
-        temp = new Point();
         puntos = new LinkedList();
 
         try {
-
+            System.out.println(strFileName);
             System.out.println("Loading Next Level...");
             FileReader file = new FileReader(strFileName);
             BufferedReader reader = new BufferedReader(file);
@@ -75,13 +74,12 @@ public class ReadandWrite {
                 if (line.equals("eof")) {
                     break;
                 }
-                System.out.println(line);
                 datos = line.split("/");
-                temp.x = (Integer.parseInt(datos[0]));
-                temp.y = (Integer.parseInt(datos[1]));
+                temp = new Point(Integer.parseInt(datos[0]), Integer.parseInt(datos[1]));
 
                 puntos.add(temp);
 
+                //System.out.println("size de puntos: "+puntos.size());
                 //System.out.println("x: " + temp.x + " y: " + temp.y);
             }
             reader.close();
