@@ -81,7 +81,7 @@ public class Game implements Runnable {
 
         // plays the backSound
         Assets.backSound.setLooping(true);
-        //Assets.backSound.play();
+        Assets.backSound.play();
     }
 
     /**
@@ -257,7 +257,7 @@ public class Game implements Runnable {
      * @param y to set the y position of the powerUp
      */
     public void powerUp(int x, int y) {
-        int ID = (int) (Math.random() * 3) + 1;
+        int ID = (int) (Math.random() * 15) + 1;
         if (ID > 0 && ID <= 3) {
             PowerUp powerUp = new PowerUp(ID, x + 45, y, 25, 25, this);
             powerUps.add(powerUp);
