@@ -93,14 +93,14 @@ public class BlockSet {
                             for(int j = 0; j < bloques.size(); j++) {
                                 for (int k = 0; k < game.getExpSize(); k++) {
                                     if (bloques.get(j).collisionExp(game.getExp(k)) && game.getExp(k).getTickNo() < 2) {
-                                        if (bloques.get(i).isCracked()) {
+                                        if (bloques.get(j).isCracked()) {
                                             game.powerUp(bloques.get(i).getX(), bloques.get(i).getY());
                                             Assets.destroy.play();
                                             game.setScore(game.getScore() + 15);
                                             bloques.remove(i);
                                             break;
                                         } else {
-                                            bloques.get(i).touch();
+                                            bloques.get(j).touch();
                                             Assets.crash.play();
                                         }
                                     }
